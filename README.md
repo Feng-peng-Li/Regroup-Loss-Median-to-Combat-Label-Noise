@@ -1,4 +1,4 @@
-
+## Regroup Median Loss for Combating Label Noise (Oral in AAAI 2024)
 
 ## Experiments
 
@@ -38,5 +38,19 @@ python Train_webvision.py
 ```
 
 
-
+@inproceedings{DBLP:conf/aaai/LiLT024,
+  author       = {Fengpeng Li and
+                  Kemou Li and
+                  Jinyu Tian and
+                  Jiantao Zhou},
+  editor       = {Michael J. Wooldridge and
+                  Jennifer G. Dy and
+                  Sriraam Natarajan},
+  title        = {Regroup Median Loss for Combating Label Noise},
+  booktitle    = {Thirty-Eighth {AAAI} Conference on Artificial Intelligence, {AAAI}
+                  2024, February 20-27, 2024, Vancouver,
+                  Canada},
+  pages        = {13474--13482},
+  year         = {2024},
+}
 
