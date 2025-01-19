@@ -187,33 +187,9 @@ def warmup(net, net2, optimizer, optimizer2, dataloader):
         inputs, labels = inputs.cuda(), labels.cuda()
         optimizer.zero_grad()
         outputs = net(inputs)
-        b_s = outputs.size(0)
-        z = torch.randn(b_s).cuda()
-        labels = F.one_hot(labels, args.num_class)
-        mask = z * args.sigma + 1.0
-        S = torch.sum(torch.softmax(outputs, dim=1) * labels, dim=1)
-        loss_v = -torch.sum(torch.log_softmax(outputs, dim=1) * labels, dim=1)
-
-        # loss_t2 = -2 * ((S - 1) / (S + 1)+ 1/3*((S - 1) / (S + 1))**3+1/5*((S - 1) / (S + 1))**5)
-        loss_t2 = -2 * ((S - 1) / (S + 1) + 1 / 2 * ((S - 1) / (S + 1)) ** 2)
-
-        loss_r = (loss_t2 - loss_t2.mean()) / torch.sqrt(loss_t2.var()) + loss_t2.mean()
-        # loss_r=loss_t2
-        cov = torch.mean(loss_r * loss_v) - torch.mean(loss_r) * torch.mean(loss_v)
-        alpha = cov / loss_r.var()
-        # if epoch<10:
-        #     loss=loss_v.mean()
-        # else:
-        loss_vr = loss_v - alpha.detach() * (loss_r)
-        loss_w = loss_vr.detach() / (loss_v.detach() + 0.00000001)
-        loss_w[loss_v < loss_vr.mean()] = 1.
-        loss_tmp = loss_w * loss_v
-        loss = loss_tmp * mask
-
-        # L = loss.mean()
-
+        
         penalty = conf_penalty(outputs)
-        L = loss.mean()
+        L = F.cross_entropy(outputs,labels.long())+penalty
         L.backward()
         optimizer.step()
         optimizer2.step()
